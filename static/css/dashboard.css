@@ -1,0 +1,530 @@
+/* =========================================
+   🏰 DnD HELPER - DASHBOARD STYLES
+   Spójne kolorystycznie z styles.css
+   ========================================= */
+
+:root {
+    --bg-darker: #1e1a12;
+    --bg-dark: #211c12;
+    --bg-panel: #2a2318;
+    --text-main: #f8f4e3;
+    --text-muted: #b8a570;
+    --accent: #d1b779;
+    --accent-hover: #e0ca8a;
+    --border: #3b3221;
+    --radius: 6px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    --sidebar-width: 320px;
+}
+
+/* === GLOBAL === */
+body {
+    background-color: var(--bg-darker);
+    color: var(--text-main);
+    font-family: "Cinzel", serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 60px);
+}
+
+/* === LEFT SIDEBAR === */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: var(--accent);
+}
+
+.sidebar-actions-top {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.add-folder-group {
+    display: flex;
+    gap: 5px;
+}
+
+.add-folder-group input {
+    flex: 1;
+    background: var(--bg-darker);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: 4px;
+}
+
+.add-folder-group button {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    cursor: pointer;
+    border-radius: 4px;
+    width: 36px;
+}
+
+.add-folder-group button:hover {
+    background: var(--border);
+}
+
+.file-tree-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
+}
+
+.tree-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--accent-hover);
+}
+
+.tree-item.folder {
+    font-weight: 500;
+}
+
+.tree-item.folder:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.tree-item.entity {
+    margin-left: 10px;
+}
+
+.tree-item.active {
+    background-color: rgba(209, 183, 121, 0.15);
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+}
+
+.folder-nav-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.folder-nav-header span {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.btn-nav-small {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 2px 6px;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.btn-nav-small:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Sidebar Bottom Actions */
+.sidebar-actions-bottom {
+    padding: 15px;
+    border-top: 1px solid var(--border);
+    background-color: rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-actions-bottom label {
+    font-size: 0.8em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* === RIGHT PANEL === */
+.editor-panel {
+    flex: 1;
+    background-color: var(--bg-panel);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-main);
+}
+
+.empty-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* === TOP PREVIEW === */
+.editor-top-preview {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), var(--bg-panel));
+    border-bottom: 1px solid var(--border);
+    max-width: 100%;
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.image-placeholder {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.image-placeholder img {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 5px;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.25s ease;
+}
+
+.image-placeholder img:hover {
+    transform: scale(1.05);
+}
+
+.image-placeholder .placeholder-text {
+    position: absolute;
+    color: var(--text-muted);
+    font-size: 0.8em;
+}
+
+.editable-title {
+    font-size: 1.8em;
+    color: var(--accent);
+    border: none;
+    background: transparent;
+    position: relative;
+    padding-right: 22px;
+    cursor: text;
+}
+
+.editable-title::after {
+    content: "✎";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--text-muted);
+    font-size: 0.6em;
+    opacity: 0.6;
+}
+
+.editable-title:hover::after {
+    opacity: 1;
+    color: var(--accent);
+}
+
+.editable-title:focus {
+    outline: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+/* === FORM AREA === */
+.editor-form-area {
+    padding: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-row {
+    margin-bottom: 20px;
+}
+
+.form-row.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+input[type="text"],
+textarea {
+    background-color: #2a2419;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 12px 14px;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.95em;
+    font-family: inherit;
+    transition: all 0.25s ease-in-out;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background-color: #332918;
+    box-shadow: 0 0 8px rgba(209, 183, 121, 0.4);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 160px;
+}
+
+.input-with-btn {
+    display: flex;
+    gap: 5px;
+}
+
+.input-with-btn input {
+    flex: 1;
+}
+
+.input-with-btn button {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    width: 40px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+
+.input-with-btn button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* === BUTTONS === */
+.btn-primary {
+    background-color: var(--accent);
+    color: #1e1a12;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-family: "Cinzel", serif;
+    cursor: pointer;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+    transition: background 0.25s;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.25s;
+}
+
+.btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* === UTILITIES === */
+.hidden {
+    display: none !important;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-icon:hover {
+    color: var(--accent-hover);
+}
+
+/* === TOAST === */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-weight: bold;
+    z-index: 2000;
+    animation: slideIn 0.3s;
+    border: 1px solid var(--border);
+    background-color: #3b3221;
+    color: var(--accent-hover);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.toast.ok {
+    background-color: #4f422c;
+}
+
+.toast.error {
+    background-color: #7a2b2b;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1a12;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3b3221;
+    border-radius: 4px;
+}
+
+/* === NOTES PREVIEW === */
+.notes-preview {
+    margin-top: 15px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    height: 600px;
+    background-color: #fff;
+    /* Google Docs is white */
+}
+
+.notes-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* === TREE VIEW (Locations) === */
+.tree-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.tree-list li {
+    margin: 2px 0;
+}
+
+.tree-node-content {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.tree-node-content:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tree-toggle {
+    width: 20px;
+    text-align: center;
+    color: var(--accent);
+    cursor: pointer;
+    margin-right: 5px;
+    font-size: 0.8em;
+}
+
+.tree-label {
+    flex: 1;
+}
+
+.tree-children {
+    padding-left: 20px;
+    display: none; /* Hidden by default */
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tree-list li.open > .tree-children {
+    display: block;
+}
+
+.tree-list li.open > .tree-node-content .tree-toggle {
+    transform: rotate(90deg); /* Optional arrow rotation if using icons */
+}

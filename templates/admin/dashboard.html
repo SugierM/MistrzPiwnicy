@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block top_title %}🏰 DnD Helper - Dashboard{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="app-container">
+
+  <!-- LEFT SIDEBAR: Navigation & Global Actions -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h3>📂 Przeglądarka</h3>
+      <button id="refresh-tree" title="Odśwież" class="btn-icon">🔄</button>
+    </div>
+
+    <!-- Quick Actions Top: Add Folder -->
+    <div class="sidebar-actions-top">
+      <div class="add-folder-group">
+        <input type="text" id="sidebar-new-folder-name" placeholder="Nowy folder..." />
+        <button id="sidebar-add-folder-btn" title="Dodaj folder">➕</button>
+      </div>
+      <div class="add-folder-group" style="margin-top: 8px;">
+        <input type="text" id="sidebar-new-entity-name" placeholder="Nowa encja..." />
+        <button id="sidebar-add-entity-btn" title="Dodaj encję">📄</button>
+      </div>
+    </div>
+
+    <!-- Tree Navigation -->
+    <div id="file-tree" class="file-tree-list">
+      <div class="loading">Ładowanie...</div>
+    </div>
+
+    <!-- Global/Context Actions (Pinned to Bottom of Left) -->
+    <div class="sidebar-actions-bottom">
+      <label>Akcje wybranego elementu:</label>
+      <button id="save-btn" class="btn-primary full-width">💾 Zapisz Zmiany</button>
+      <button id="set-vis-btn" class="btn-secondary full-width">👁️ Pokaż na Vis</button>
+      <button id="set-music-btn" class="btn-secondary full-width">🎵 Graj Muzykę</button>
+    </div>
+  </aside>
+
+  <!-- RIGHT PANEL: Content Editor -->
+  <main class="editor-panel">
+
+    <!-- Empty State -->
+    <div id="empty-state" class="empty-state">
+      <div class="empty-content">
+        <h1>Wybierz element</h1>
+        <p>Kliknij na Folder lub Encję z listy po lewej stronie.</p>
+      </div>
+    </div>
+
+    <!-- Editor Content -->
+    <div id="editor-container" class="editor-content hidden">
+
+      <!-- Top: Image Preview Area -->
+      <div class="editor-top-preview">
+        <div class="image-placeholder" id="image-preview-area">
+          <span class="placeholder-text">Brak Obrazu</span>
+          <img id="main-preview-img" src="" alt="Podgląd" class="hidden" />
+        </div>
+        <h2 id="editor-title" contenteditable="true" class="editable-title">Nazwa Obiektu</h2>
+      </div>
+
+      <!-- Scrollable Form Area -->
+      <div class="editor-form-area">
+
+        <div class="form-row">
+          <label>Opis</label>
+          <textarea id="editor-description" rows="4" placeholder="Opis fabularny lub notatki..."></textarea>
+        </div>
+
+        <div class="form-row split">
+          <div class="field-group">
+            <label>Typ</label>
+            <select id="editor-type">
+              <option value="OTHER">Inne</option>
+              <option value="NPC">NPC</option>
+              <option value="QUEST">Quest</option>
+              <option value="MAP">Mapa</option>
+              <option value="ITEM">Przedmiot</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Frakcja</label>
+            <input type="text" id="editor-fraction" placeholder="Np. Rebelianci" />
+          </div>
+        </div>
+
+        <div class="form-row split">
+          <div class="field-group">
+            <label>Link do Obrazu</label>
+            <div class="input-with-btn">
+              <input type="text" id="editor-image" placeholder="URL lub ID Drive..." />
+              <button id="upload-image-btn" title="Wgraj">📤</button>
+            </div>
+          </div>
+          <div class="field-group">
+            <label>Link do Muzyki</label>
+            <div class="input-with-btn">
+              <input type="text" id="editor-music" placeholder="URL lub ID Drive..." />
+              <button id="upload-music-btn" title="Wgraj">📤</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label>Link do Notatek (Google Docs)</label>
+          <input type="text" id="editor-notes" placeholder="https://docs.google.com/..." />
+        </div>
+
+        <div id="notes-preview-container" class="notes-preview hidden">
+          <iframe id="notes-iframe" src="" allowfullscreen></iframe>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Hidden File Inputs -->
+<input type="file" id="file-input-image" class="hidden" accept="image/*" />
+<input type="file" id="file-input-music" class="hidden" accept="audio/*" />
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

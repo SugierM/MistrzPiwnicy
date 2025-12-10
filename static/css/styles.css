@@ -1,0 +1,362 @@
+/* === GLOBAL === */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Cinzel", serif;
+  color: #f8f4e3;
+  background-color: #1e1a12;
+  height: 100%;
+  width: 100%;
+}
+
+#app-wrapper {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* === SIDEBAR === */
+#sidebar {
+  width: 230px;
+  background: linear-gradient(#211c12, #17130d);
+  border-right: 2px solid #3b3221;
+  color: #d1b779;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  z-index: 10;
+}
+
+.sidebar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo img {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+}
+
+.logo-text {
+  font-weight: bold;
+  color: #d1b779;
+  font-size: 1.1em;
+  white-space: nowrap;
+  transition: opacity 0.3s ease, width 0.3s ease;
+}
+
+#toggleSidebar {
+  background: none;
+  color: #d1b779;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+#toggleSidebar:hover {
+  color: #fff3c0;
+  transform: scale(1.1);
+}
+
+/* Menu */
+#sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+#sidebar li {
+  margin: 6px 0;
+}
+
+#sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d1b779;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.3s, color 0.3s;
+}
+
+#sidebar a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff3c0;
+}
+
+/* === COLLAPSED STAN – sidebar + topbar razem === */
+#sidebar.collapsed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  border-right: none;
+  border-bottom: 2px solid #3b3221;
+  background: linear-gradient(#211c12, #17130d);
+  z-index: 20;
+}
+
+#sidebar.collapsed .sidebar-inner {
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 16px;
+}
+
+#sidebar.collapsed .logo {
+  flex-direction: row;
+}
+
+#sidebar.collapsed .logo img {
+  width: 40px;
+  height: 40px;
+}
+
+#sidebar.collapsed .logo-text {
+  font-size: 1em;
+  margin-right: 16px;
+}
+
+#sidebar.collapsed ul {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+#sidebar.collapsed li {
+  margin: 0 10px;
+}
+
+#sidebar.collapsed a {
+  padding: 6px 8px;
+  font-size: 16px;
+  gap: 6px;
+}
+
+#sidebar.collapsed a span {
+  display: inline;
+}
+
+/* === MAIN + TOPBAR === */
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+#topbar {
+  background: #3b3221;
+  color: #f8f4e3;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  min-height: 60px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #3b3221;
+  z-index: 5;
+}
+
+#content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* === BUTTONS === */
+button {
+  background: #d1b779;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: 'Cinzel', serif;
+}
+
+button:hover {
+  background: #e0ca8a;
+}
+
+/* === PANELS === */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tree-panel {
+  width: 30%;
+  border-right: 1px solid #444;
+  padding-right: 20px;
+  box-sizing: border-box;
+  min-width: 250px;
+}
+
+.edit-panel {
+  flex: 1;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+
+/* === SCROLLBAR === */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #1e1a12;
+}
+::-webkit-scrollbar-thumb {
+  background: #3b3221;
+  border-radius: 4px;
+}
+
+/* === RESPONSYWNOŚĆ === */
+
+/* Telefony / małe ekrany pionowo */
+@media (max-width: 768px) {
+  #app-wrapper {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    border-right: none;
+    border-bottom: 2px solid #3b3221;
+  }
+
+  #sidebar.collapsed {
+    height: 60px;
+  }
+
+  #sidebar ul {
+    display: none;
+  }
+
+  #sidebar.collapsed ul {
+    display: none;
+  }
+
+  #topbar {
+    display: none; /* topbar znika, sidebar przejmuje rolę */
+  }
+
+  #content {
+    padding: 10px;
+  }
+
+  #toggleSidebar {
+    font-size: 28px;
+  }
+}
+
+/* Krajobraz / panorama */
+@media (max-height: 500px) {
+  body {
+    font-size: 0.9em;
+  }
+
+  #sidebar {
+    width: 180px;
+  }
+
+  #sidebar.collapsed {
+    height: 55px;
+  }
+
+  #logo-text {
+    font-size: 0.9em;
+  }
+
+  #topbar {
+    height: 55px;
+    min-height: 55px;
+  }
+
+  button {
+    padding: 6px 10px;
+  }
+}
+
+/* Telefony szerokie (poziomo) */
+@media (max-width: 900px) and (orientation: landscape) {
+  #app-wrapper {
+    flex-direction: column;
+  }
+
+  #sidebar {
+    width: 100%;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 2px solid #3b3221;
+  }
+
+  #sidebar ul {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+  }
+
+  #sidebar ul li {
+    margin: 0 6px;
+  }
+
+  #topbar {
+    display: none;
+  }
+
+  #content {
+    padding: 10px;
+  }
+}
+
+/* Małe poprawki dla bardzo wąskich ekranów */
+@media (max-width: 400px) {
+  .logo-text {
+    display: none;
+  }
+
+  #sidebar.collapsed ul li {
+    margin: 0 4px;
+  }
+
+  #sidebar a {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  button {
+    padding: 6px 8px;
+  }
+}

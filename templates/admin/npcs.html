@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}NPC | DnD Helper{% endblock %}
+{% block top_title %}👤 Baza NPC{% endblock %}
+
+{% block content %}
+<div class="flex-container">
+    <div class="list-panel">
+        <h2>Lista Postaci</h2>
+        <div id="npc-list" class="styled-list">
+            <!-- Loading... -->
+            <div class="loading">Ładowanie...</div>
+        </div>
+    </div>
+
+    <div class="details-panel">
+        <h2>Szczegóły</h2>
+        <div id="npc-details" class="empty-selection">Wybierz postać z listy</div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/entities.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => loadNPCs());
+</script>
+{% endblock %}

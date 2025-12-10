@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}DnD Helper{% endblock %}</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <div id="app-wrapper">
+    {% include 'components/sidebar.html' %}
+    <div id="main">
+      {% include 'components/topbar.html' %}
+      <div id="content">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

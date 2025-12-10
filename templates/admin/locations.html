@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Lokacje | DnD Helper{% endblock %}
+{% block top_title %}🌍 Lokacje{% endblock %}
+
+{% block content %}
+<div class="flex-container">
+  <div class="tree-panel">
+    <h2>Drzewo kampanii</h2>
+    <div id="location-tree"></div>
+  </div>
+  <div class="edit-panel">
+    <h2>Szczegóły</h2>
+    <div id="details">Wybierz lokalizację z lewej strony.</div>
+  </div>
+</div>
+</div>
+<script src="{{ url_for('static', filename='js/locations.js') }}"></script>
+{% endblock %}

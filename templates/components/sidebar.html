@@ -1,0 +1,17 @@
+<nav id="sidebar" class="expanded">
+  <div class="sidebar-header">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" width="90" alt="DnD Logo" />
+      <span class="logo-text">DnD Helper</span>
+    </div>
+  </div>
+  <button id="toggleSidebar" onclick="toggleSidebar()">☰</button>
+  <ul>
+    <li><a href="/admin/dashboard">🏠 <span>Dashboard</span></a></li>
+    <li><a href="/admin/locations">📂 <span>Lokacje</span></a></li>
+    <li><a href="/vis" target="_blank">🧝 <span>Widok</span></a></li>
+    <li><a href="/admin/locations">🌍 Lokacje (Drzewo)</a></li>
+    <li><a href="/admin/npcs">👤 NPC</a></li>
+    <li><a href="/admin/fractions">⚔️ Frakcje</a></li>
+  </ul>
+</nav>

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Lokacje{% endblock %}
+{% block top_title %}🌍 Lokacje{% endblock %}
+
+{% block content %}
+<h2>📁 Struktura kampanii (Google Drive)</h2>
+<div id="drive-tree" style="margin-bottom: 20px;"></div>
+
+<script>
+async function loadDriveTree() {
+  const res = await fetch('/api/drive/tree');
+  const tree = await res.json();
+  const container = document.getElementById('drive-tree');
+  container.innerHTML = renderTree(tree);
+}
+
+function renderTree(obj) {
+  let html = '<ul>'
+  for (const key in obj) {
+    if (typeof obj[key] === 'object') {
+      html += `<li><strong>${key}</strong>${renderTree(obj[key])}</li>`;
+    } else {
+      html += `<li>${key}</li>`;
+    }
+  }
+  html += '</ul>';
+  return html;
+}
+
+document.addEventListener('DOMContentLoaded', loadDriveTree);
+</script>
+
+<hr>
+
+<div class="flex-container">
+  <div class="tree-panel">
+    <h2>Drzewo kampanii</h2>
+    <div id="location-tree"></div>
+  </div>
+  <div class="edit-panel">
+    <h2>Szczegóły</h2>
+    <div id="details">Wybierz lokalizację z lewej strony.</div>
+  </div>
+</div>
+{% endblock %}

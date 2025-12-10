@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DnD Visualizer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400&display=swap"
+    rel="stylesheet">
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+    }
+
+    /* Container for the images */
+    #visual-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* We use two layers for smooth cross-fading */
+    .vis-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* Keep aspect ratio */
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 1;
+    }
+
+    .vis-layer.active {
+      opacity: 1;
+      z-index: 2;
+    }
+
+    /* Ambient background blur effect (optional, fills gaps) */
+    #ambient-bg {
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      width: 120%;
+      height: 120%;
+      background-size: cover;
+      background-position: center;
+      filter: blur(20px) brightness(0.3);
+      z-index: 0;
+      transition: background-image 1.5s ease-in-out;
+    }
+
+    /* Info/Status overlay */
+    #status-overlay {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 12px;
+      font-family: 'Lato', sans-serif;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Loader */
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid #d4af37;
+      /* Gold */
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      z-index: 5;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="ambient-bg"></div>
+
+  <div id="visual-container">
+    <img id="layer-a" class="vis-layer active" src="" alt="">
+    <img id="layer-b" class="vis-layer" src="" alt="">
+    <div class="loader" id="loader"></div>
+  </div>
+
+  <!-- Hidden audio element for non-YouTube files -->
+  <!-- Hidden audio element for non-YouTube files -->
+  <audio id="audio-player" loop></audio>
+  <!-- Hidden container for YouTube Player -->
+  <div id="yt-player" style="position: absolute; top: -9999px; left: -9999px;"></div>
+
+  <div id="status-overlay">OCZEKIWANIE...</div>
+
+  <div id="start-overlay">
+    <button id="start-btn">🔊 WŁĄCZ DŹWIĘK</button>
+  </div>
+
+  <style>
+    #start-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 0.5s;
+    }
+
+    #start-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #start-btn {
+      background: #d4af37;
+      border: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      font-family: 'Cinzel', serif;
+      cursor: pointer;
+      color: #000;
+      border-radius: 5px;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    #start-btn:hover {
+      background: #f4cf57;
+    }
+  </style>
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    const stateUrl = '/vis/state';
+    const proxyUrlBase = '/vis/proxy_image?url=';
+
+    let currentImageRawUrl = null;
+    let currentMusicUrl = null;
+    let audioAllowed = false;
+
+    // Visual elements
+    const layerA = document.getElementById('layer-a');
+    const layerB = document.getElementById('layer-b');
+    const ambientBg = document.getElementById('ambient-bg');
+    const loader = document.getElementById('loader');
+    const statusOverlay = document.getElementById('status-overlay');
+    const startOverlay = document.getElementById('start-overlay');
+    const startBtn = document.getElementById('start-btn');
+
+    // Audio elements
+    const audioPlayer = document.getElementById('audio-player');
+    let ytPlayer = null;
+    let ytReady = false;
+
+    // User interaction handling
+    startBtn.addEventListener('click', () => {
+      audioAllowed = true;
+      startOverlay.classList.add('hidden');
+
+      // Try to resume anything pending
+      if (ytReady && ytPlayer && currentMusicUrl && extractYoutubeId(currentMusicUrl)) {
+        ytPlayer.unMute();
+        ytPlayer.setVolume(100);
+        ytPlayer.playVideo();
+      } else if (audioPlayer.src && currentMusicUrl) {
+        audioPlayer.play().catch(e => console.warn(e));
+      }
+    });
+
+    // We toggle between who is 'active'
+    let activeLayer = layerA;
+    let backLayer = layerB;
+
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('yt-player', {
+        height: '200',
+        width: '200',
+        videoId: '',
+        playerVars: {
+          'autoplay': 1,
+          'controls': 0,
+          'loop': 1,
+          'playlist': '',
+          'origin': window.location.origin
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      ytReady = true;
+      console.log("YT Player Ready");
+      if (audioAllowed && currentMusicUrl && extractYoutubeId(currentMusicUrl)) {
+        event.target.unMute();
+        event.target.setVolume(100);
+        event.target.playVideo();
+      }
+    }
+
+    function onPlayerStateChange(event) {
+      // Loop functionality for YouTube
+      if (event.data === YT.PlayerState.ENDED) {
+        ytPlayer.playVideo();
+      }
+    }
+
+    function setStatus(msg) {
+      statusOverlay.innerText = msg;
+      if (msg && !msg.includes('Błąd')) {
+        setTimeout(() => {
+          if (statusOverlay.innerText === msg) statusOverlay.innerText = '';
+        }, 5000);
+      }
+    }
+
+    function showLoader(show) {
+      loader.style.display = show ? 'block' : 'none';
+    }
+
+    function swapLayers() {
+      const temp = activeLayer;
+      activeLayer = backLayer;
+      backLayer = temp;
+      activeLayer.classList.add('active');
+      backLayer.classList.remove('active');
+      ambientBg.style.backgroundImage = `url('${activeLayer.src}')`;
+    }
+
+    async function loadImage(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img.src);
+        img.onerror = (e) => reject(e);
+        img.src = proxyUrlBase + encodeURIComponent(url);
+      });
+    }
+
+    function extractYoutubeId(url) {
+      if (!url) return false;
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[7].length == 11) ? match[7] : false;
+    }
+
+    async function updateState() {
+      try {
+        const res = await fetch(stateUrl);
+        if (!res.ok) throw new Error("Backend disconnect");
+        const state = await res.json();
+
+        // --- MUSIC HANDLER ---
+        // Basic change detection or force play if we just allowed audio
+        const musicChanged = state.current_music && state.current_music !== currentMusicUrl;
+
+        if (musicChanged) {
+          currentMusicUrl = state.current_music;
+          console.log("New music detected:", currentMusicUrl);
+
+          const ytId = extractYoutubeId(currentMusicUrl);
+
+          if (ytId) {
+            // Handle YouTube
+            audioPlayer.pause();
+            audioPlayer.src = "";
+
+            if (ytReady && ytPlayer && ytPlayer.loadVideoById) {
+              ytPlayer.loadVideoById(ytId);
+              if (audioAllowed) {
+                ytPlayer.unMute();
+                ytPlayer.setVolume(100);
+                ytPlayer.playVideo();
+                setStatus("Odtwarzanie z YouTube...");
+              } else {
+                setStatus("Kliknij WŁĄCZ DŹWIĘK aby słuchać");
+              }
+            } else {
+              // Retry next tick
+              currentMusicUrl = null;
+            }
+          } else {
+            // Handle Audio File
+            if (ytReady && ytPlayer && ytPlayer.stopVideo) {
+              ytPlayer.stopVideo();
+            }
+
+            let trackUrl = currentMusicUrl.replace("dl=0", "dl=1").replace("usp=sharing", "usp=direct");
+            audioPlayer.src = trackUrl;
+            audioPlayer.volume = 0.5;
+
+            if (audioAllowed) {
+              audioPlayer.play()
+                .then(() => setStatus("Odtwarzanie pliku audio..."))
+                .catch(e => {
+                  console.warn("Audio play failed", e);
+                  setStatus("Błąd: " + e.message);
+                });
+            } else {
+              setStatus("Kliknij WŁĄCZ DŹWIĘK aby słuchać");
+            }
+          }
+        } else if (!state.current_music && currentMusicUrl) {
+          // Music cleared
+          currentMusicUrl = "";
+          audioPlayer.pause();
+          if (ytReady && ytPlayer && ytPlayer.stopVideo) ytPlayer.stopVideo();
+          setStatus("");
+        }
+
+        // --- IMAGE HANDLER ---
+        if (state.current_image && state.current_image !== currentImageRawUrl) {
+          // ... (Same image logic)
+          currentImageRawUrl = state.current_image;
+          showLoader(true);
+          setStatus("Wczytywanie obrazu...");
+          try {
+            const newSrc = await loadImage(currentImageRawUrl);
+            backLayer.src = newSrc;
+            requestAnimationFrame(() => {
+              swapLayers();
+              showLoader(false);
+              setStatus("");
+            });
+          } catch (err) {
+            console.error("Failed to load image via proxy", err);
+            showLoader(false);
+            setStatus("Błąd wczytywania obrazu");
+          }
+        }
+
+      } catch (e) {
+        console.error("Polling error:", e);
+      }
+    }
+
+    // Poll every 3 seconds
+    setInterval(updateState, 3000);
+    updateState();
+
+  </script>
+</body>
+
+</html>

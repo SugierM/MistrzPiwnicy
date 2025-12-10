@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Błąd {{ code }}{% endblock %}
+{% block top_title %}⚠️ Błąd{% endblock %}
+
+{% block content %}
+<div style="text-align:center;margin-top:20vh;">
+  <h1>{{ message or "Wystąpił nieoczekiwany błąd." }}</h1>
+  {% if code == 404 %}
+    <p>Nie znaleziono strony, której szukasz.</p>
+  {% elif code == 500 %}
+    <p>Ups! Wewnętrzny błąd serwera.</p>
+  {% else %}
+    <p>Coś poszło nie tak ({{ code }}).</p>
+  {% endif %}
+  <p style="margin-top:30px;">
+    <a href="/admin/dashboard">⬅️ Wróć do Dashboardu</a>
+  </p>
+</div>
+{% endblock %}
