@@ -109,11 +109,9 @@ function showLocationDetails(loc) {
     const panel = document.getElementById("details");
     panel.innerHTML = `
         <h3>${loc.name}</h3>
-        <p><strong>ID:</strong> ${loc.id}</p>
         <div style="margin-top:20px;">
             <a href="/admin/dashboard?folder=${loc.id}" class="btn-primary">📂 Przejdź do folderu</a>
             <hr>
-            <p><small>Rodzic: ${loc.parent_id || 'Brak'}</small></p>
         </div>
     `;
 }

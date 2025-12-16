@@ -7,6 +7,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
+from google.auth.exceptions import RefreshError
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,10 +22,16 @@ def get_drive_service():
     creds = None
     if os.path.exists(TOKEN_FILE):
         creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+    
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
+            try:
+                creds.refresh(Request())
+            except RefreshError:
+                print("Token expired or revoked. Re-authenticating...")
+                creds = None # Trigger re-auth
+        
+        if not creds:
             if not os.path.exists(CREDENTIALS_FILE):
                 raise FileNotFoundError(f"Missing {CREDENTIALS_FILE}")
             flow = InstalledAppFlow.from_client_secrets_file(
@@ -32,8 +39,10 @@ def get_drive_service():
             )
             creds = flow.run_local_server(port=0, open_browser=False)
             print("Authentication URL:", flow.authorization_url()[0])
+            
         with open(TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
+            
     return build("drive", "v3", credentials=creds)
 
 def list_folder_content(folder_id=None):

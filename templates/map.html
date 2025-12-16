@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Map Editor</title>
+    <script src="https://cdn.jsdelivr.net/npm/konva@9.2.0/konva.min.js"></script>
+    <script>
+        const IS_ADMIN = {{ 'true' if is_admin else 'false' }};
+    </script>
+    <link rel="stylesheet" href="/static/css/map.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="app-container">
+        {% if is_admin %}
+        <!-- Toolbar -->
+        <div id="toolbar">
+            <div class="brand">DnD <span>MapTool</span></div>
+
+            <div class="tools">
+                <button class="tool-btn active" id="tool-select" title="Select/Move (V)"><i
+                        class="fa-solid fa-arrow-pointer"></i></button>
+                <button class="tool-btn" id="tool-pan" title="Pan Map (H)"><i class="fa-solid fa-hand"></i></button>
+                <div class="tool-group">
+                    <button class="tool-btn" id="tool-brush" title="Brush (B)"><i
+                            class="fa-solid fa-paint-brush"></i></button>
+                    <input type="color" id="brush-color" value="#00D2FF" title="Brush Color">
+                </div>
+                <button class="tool-btn" id="tool-delete" title="Delete Selected (Del)" style="color: #ff6b6b;"><i
+                        class="fa-solid fa-trash"></i></button>
+                <div class="separator"></div>
+                <button class="tool-btn" id="tool-upload" title="Upload Map Image"><i
+                        class="fa-solid fa-upload"></i></button>
+                <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                <button class="tool-btn" id="tool-scale" title="Set Scale (1m)"><i
+                        class="fa-solid fa-ruler"></i></button>
+                <button class="tool-btn" id="tool-grid" title="Toggle Grid"><i
+                        class="fa-solid fa-border-all"></i></button>
+                <div class="separator"></div>
+                <button class="tool-btn" id="btn-save" title="Save Map"><i class="fa-solid fa-floppy-disk"></i>
+                    Save</button>
+                <button class="tool-btn" id="btn-export" title="Export Image"><i
+                        class="fa-solid fa-file-export"></i></button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Main Workspace -->
+        <div id="workspace">
+            <!-- Sidebar -->
+            {% if is_admin %}
+            <div id="sidebar">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="tab-assets">Assets</button>
+                    <button class="tab-btn" data-tab="tab-characters">Tokens</button>
+                    <button class="tab-btn" data-tab="tab-drive">Drive</button>
+                </div>
+
+                <div class="tab-content active" id="tab-assets">
+                    <!-- Asset Browser -->
+                    <div class="asset-category">
+                        <h3>Houses</h3>
+                        <div class="asset-grid" id="assets-houses"></div>
+                    </div>
+                    <div class="asset-category">
+                        <h3>Nature</h3>
+                        <div class="asset-grid" id="assets-nature"></div>
+                    </div>
+                    <div class="asset-category">
+                        <h3>Landmarks</h3>
+                        <div class="asset-grid" id="assets-landmarks"></div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-characters">
+                    <div class="section-title">Ad-Hoc</div>
+                    <div class="token-create">
+                        <input type="text" id="adhoc-name" placeholder="Monster Name">
+                        <button id="btn-add-adhoc"><i class="fa-solid fa-plus"></i> Add</button>
+                    </div>
+                    <div class="section-title">Library</div>
+                    <div class="asset-grid" id="assets-characters"></div>
+                </div>
+
+                <div class="tab-content" id="tab-drive">
+                    <div class="drive-controls">
+                        <button id="btn-refresh-drive"><i class="fa-solid fa-sync"></i> Refresh</button>
+                    </div>
+                    <div id="drive-list" class="file-list">
+                        <!-- Drive Items -->
+                    </div>
+                </div>
+
+                <div id="layer-controls">
+                    <div class="section-title">Layers</div>
+                    <label><input type="checkbox" checked id="toggle-grid-layer"> Grid</label>
+                    <label><input type="checkbox" checked id="toggle-tokens-layer"> Tokens</label>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Canvas Container -->
+            <div id="canvas-container">
+                <div id="drop-zone-overlay">Drop Image Here to Start</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scale Modal -->
+    <div id="scale-modal" class="modal">
+        <div class="modal-content">
+            <h2>Set Map Scale</h2>
+            <p>Drag the reference box to match a known distance (e.g., 1 meter or 5 feet).</p>
+            <div class="form-group">
+                <label>Distance represented:</label>
+                <input type="number" id="scale-distance" value="1" min="1" step="0.5">
+                <select id="scale-unit">
+                    <option value="m">Meters</option>
+                    <option value="ft">Feet</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-apply-scale">Apply</button>
+                <button class="cancel"
+                    onclick="document.getElementById('scale-modal').style.display='none'">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/static/js/map.js"></script>
+
+</body>
+
+</html>

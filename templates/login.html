@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie - Mistrz Gry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --bg-panel: #252525;
+            --accent: #d4a017;
+            --text-main: #e0e0e0;
+            --border: #444;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background-color: var(--bg-panel);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: var(--accent);
+            margin-bottom: 2rem;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Cinzel', serif;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-box">
+        <h1>Brama Mistrza Gry</h1>
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <input type="password" name="password" placeholder="Hasło dostępu" required autofocus>
+            <button type="submit">Wejdź</button>
+        </form>
+        <div style="margin-top: 20px;">
+            <a href="/vis" style="color: var(--accent); text-decoration: none; font-size: 0.9rem;">Przejdź do
+                Wizualizacji (/vis)</a>
+            <br>
+            <a href="/map"
+                style="color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-top: 10px; display: inline-block;">Mapa
+                (Tryb Obserwatora)</a>
+        </div>
+    </div>
+</body>
+
+</html>

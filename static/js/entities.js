@@ -80,10 +80,8 @@ function showDetails(entity) {
     panel.innerHTML = `
         <h3>${entity.name}</h3>
         <p><strong>Typ:</strong> ${entity.type || "N/A"}</p>
-        <p><strong>Folder ID:</strong> ${entity.folder_id}</p>
         <div style="margin-top:20px;">
             <a href="/admin/dashboard?folder=${entity.folder_id}" class="btn-primary">📂 Przejdź do folderu</a>
-            <button onclick="copyId('${entity.id}')" class="btn-secondary">📋 Kopiuj ID</button>
         </div>
     `;
     panel.classList.remove("empty-selection");
