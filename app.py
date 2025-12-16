@@ -87,7 +87,18 @@ def index():
     return render_template("admin/dashboard.html", welcome=True)
 
 
+REQUIRED_ASSET_DIRS = [
+    Path("static/assets"),
+    Path("static/assets/characters"),
+    Path("static/assets/map"),
+    Path("static/assets/map/houses"),
+    Path("static/assets/map/landmarks"),
+    Path("static/assets/map/nature"),
+]
 
+def ensure_asset_dirs() -> None:
+    for d in REQUIRED_ASSET_DIRS:
+        d.mkdir(parents=True, exist_ok=True)
 
 @app.errorhandler(404)
 def not_found(e):
@@ -99,4 +110,5 @@ def internal_error(e):
 
 if __name__ == "__main__":
     os.makedirs("data", exist_ok=True)
+    ensure_asset_dirs()
     app.run(host="0.0.0.0", port=5000, debug=True)
